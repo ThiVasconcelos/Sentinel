@@ -2,25 +2,32 @@
   <div class="px-2 lg:px-8">
     <div class="relative flex h-16 items-center">
       <div>
-        <div class="flex items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
-            <img
-              class="h-8 f"
-              src="https://onedrive.live.com/embed?resid=3B97D3D8E72671E1%21114&authkey=%21AGkV3YUYvaxR8yw&width=102&height=103"
-              alt="Your Company" />
+            <img class="h-8 f mg mr-4" src="" alt="Your Company" />
           </div>
           <div class="sm:block">
             <div class="flex space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <a
-                href="grupos"
-                class="rounded-md bg-white px-3 py-2 text-sm font-medium text-black"
+                (click)="popUpGrupos()"
+                class="rounded-md px-3 py-2 text-sm font-medium select-none"
+                [ngClass]="
+                  grupos === true
+                    ? 'bg-white hover:bg-white'
+                    : 'bg-black text-gray-300  hover:bg-teal-700  hover:text-white'
+                "
                 aria-current="page"
                 >Grupos</a
               >
               <a
-                href="monitoramento"
-                class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                class="rounded-md px-3 py-2 text-sm font-medium select-none"
+                [ngClass]="
+                  monitoramento === true
+                    ? 'bg-white hover:bg-white'
+                    : 'bg-black text-gray-300  hover:bg-teal-700  hover:text-white'
+                "
+                (click)="popUpMonitoramento()"
                 >Monitoramento</a
               >
             </div>
@@ -28,13 +35,12 @@
         </div>
       </div>
       <div class="md:ml-auto">
-        <div class="absolute flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <div class="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <button
             type="button"
-            class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            (click)="dropdownNotifica()">
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">Notificações</span>
+            class="relative rounded-full bg-gray-800 p-1 hover:text-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:ring-offset-2 focus:ring-offset-gray-800"
+            [ngClass]="novaNotifica === true ? ' text-red-500' : ' text-gray-400'"
+            (click)="doubleCallNotifica()">
             <svg
               class="h-6 w-6"
               fill="none"
@@ -48,8 +54,6 @@
                 d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
             </svg>
           </button>
-          @if (showNotifica===true) { }
-
           <!-- Profile dropdown -->
           <div class="relative ml-3">
             <div>
@@ -61,7 +65,7 @@
                 aria-haspopup="true"
                 (click)="dropdown()">
                 <span class="absolute -inset-1.5"></span>
-                <span class="sr-only">menu</span>
+
                 <img
                   class="h-8 w-8 rounded-full"
                   src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -78,16 +82,16 @@
               tabindex="-1">
               <!-- Active: "bg-gray-100", Not Active: "" -->
               <a
-                href="config"
-                class="block px-4 py-2 text-sm text-gray-700"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-black hover:text-white"
                 role="menuitem"
                 tabindex="-1"
                 id="user-menu-item-1"
-                >Configurações</a
-              >
+                (click)="popUpConfig()"
+                >Configurações
+              </a>
               <a
                 href=""
-                class="block px-4 py-2 text-sm text-gray-700"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:text-white"
                 role="menuitem"
                 tabindex="-1"
                 id="user-menu-item-2"
@@ -101,3 +105,36 @@
     </div>
   </div>
 </nav>
+@if (showNotifica===true) {
+<div
+  class="grid grid-cols-1 grid-flow-row absolute right-0 z-10 gap-y-4 mt-2 w-full max-w-md origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+  role="textbox"
+  aria-orientation="vertical">
+  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-400">aaaaa</a>
+  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-400">aaaaa</a>
+  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-400">aaaaa</a>
+</div>
+
+} @if (grupos===true) {
+<body class="grid grid-cols-4 grid-rows-1 min-h-screen py-6 px-6 space-x-16">
+  <div class="w-[400px] h-[200px] bg-black rounded-md">Monitoramento</div>
+  <div class="w-[400px] h-[200px] bg-black rounded-md">Monitoramento</div>
+</body>
+
+} @if (config===true) {
+
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-[700px] h-[600px] bg-black rounded-md">
+    <a
+      class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-red-500 hover:text-white"
+      >Config</a
+    >
+  </div>
+</body>
+
+} @if (monitoramento===true) {
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-[1200px] h-[600px] bg-black rounded-md">Monitoramento</div>
+</body>
+
+}
