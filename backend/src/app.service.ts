@@ -40,13 +40,6 @@ export class AppService {
   async onSticker(ctx: Context) {
     await ctx.reply('👍');
   }
-
-  @Hears('hi')
-  async hearsHi(@Ctx() ctx: Context) {
-    console.log(ctx.chat);
-    await ctx.reply('Hey there');
-  }
-
   @Command('adicionar_palavra')
   async addBadWord(@Message() message: TelegramMessage, @Ctx() ctx: Context) {
     let [_, ...rest] = message.text.split(' ');
