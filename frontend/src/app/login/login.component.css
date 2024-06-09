@@ -1,0 +1,149 @@
+
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;	
+	font-family: Georgia, serif;
+	font-weight: bold;
+}
+
+
+body {
+	background: linear-gradient(90deg, #000, #468D89);		
+}
+
+.con-ainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+.screen {		
+	background: linear-gradient(90deg,  #000, #468D89);		
+	position: relative;	
+	height: 600px;
+	width: 600px;	
+	box-shadow: 0px 0px 24px #fff;
+    border-radius: 26px;
+	overflow: hidden;
+}
+
+.screen__content {
+	z-index: 1;
+	position: relative;	
+	height: 100%;
+}
+
+.screen__background {		
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 0;
+	-webkit-clip-path: inset(0 0 0 0);
+	clip-path: inset(0 0 0 0);	
+}
+
+.screen__background__shape {
+	transform: rotate(45deg);
+	position: absolute;
+}
+
+.screen__background__shape1 {
+	height: 500px;
+	width: 1040px;
+	background: #000;	
+	top: -50px;
+	right: 120px;	
+	border-radius: 0 160px 0 0;
+    
+}
+
+.login {
+	width: 320px;
+	padding: 30px;
+	padding-top: 156px;
+}
+
+.login__field {
+	padding: 20px 0px;	
+	position: relative;	
+}
+
+.login__icon {
+	position: absolute;
+	top: 30px;
+	color: #0ee8ef;
+}
+
+.login__input {
+    color: white;
+	border: none;
+	border-bottom: 2px solid #aaa7a7;
+	background: none;
+	padding: 10px;
+	padding-left: 24px;
+	font-weight: 700;
+	width: 75%;
+	transition: .1s;
+}
+
+.login__input:active,
+.login__input:focus,
+.login__input:hover {
+	outline: none;
+	border-bottom-color:white;
+}
+.login__input:not(:placeholder-shown){
+	color:#468D89;
+	border-bottom-color:#468D89;
+}
+
+.login__submit {
+	background: #ffffff;
+	font-size: 16px;
+	margin-top: 30px;
+	padding: 8px 8px;
+	border-radius: 26px;
+	border: 2px solid #ffffff;
+	font-weight: 700;
+	width: 100%;
+	color: #468D89;
+	cursor: pointer;
+	transition: .2s;
+}
+.login__submit:hover{
+	background: #468D89;
+	color:#000000;
+	border: 2px solid #468D89;
+}
+
+
+.button__icon {
+	font-size: 24px;
+	margin-left: auto;
+	color: #7875B5;
+}
+.button__text {
+    text-align: center;
+}
+.screen__title {
+    position: absolute;
+    top: 35px;
+    right: 20;
+    transform: translateX(30%);
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    z-index: 999;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+}
