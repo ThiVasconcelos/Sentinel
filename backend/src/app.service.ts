@@ -22,7 +22,102 @@ import { DatabaseService } from './database/database.service';
 @Update()
 @Injectable()
 export class AppService {
-  badWords = ['gordo'];
+  badWords = [
+    'gordo',
+    'Filho da Puta',
+    'merdinha',
+    'seu merda',
+    'seu bosta',
+    'fudido',
+    'tu e um bosta',
+    'tu é um bosta',
+    'pedaço de bosta',
+    'te fode',
+    'puta',
+    'arrombado',
+    'chupa rola',
+    'chupa meu pau',
+    'chupa mel pal',
+    'chupa mel pau',
+    'chupa minha pica',
+    'smt',
+    'da o cu',
+    'vsf',
+    'vtnc',
+    'viado',
+    'viadinho',
+    'gay',
+    'traveco',
+    'putinha',
+    'se mata',
+    'morre',
+    'arromba',
+    'caralho',
+    'carlho',
+    'c4ralho',
+    'c4r4lh0',
+    'porra',
+    'carai',
+    'vou te matar',
+    'vou te mata',
+    'me chupa',
+    'me xupa',
+    'mama aqui',
+    'mama aki',
+    'minha geba',
+    'minha rola',
+    'bolofofo',
+    'leitãozinho',
+    'preto',
+    'negro',
+    'criolo',
+    'negresco',
+    'xinguilingui',
+    'xing ling',
+    'pastel de flango',
+    'da o ku',
+    'tu e feio',
+    'seu feio',
+    'seu feioso',
+    'sai feio',
+    'tua bunda',
+    'Energúmeno',
+    'buceta de grilo',
+    'parece um grilo',
+    'tu e adotado',
+    'seu adotado',
+    'tu é adotado',
+    'foda-se',
+    'se foda',
+    'fodase',
+    'fodasse',
+    'fds',
+    'punheta',
+    'punheteiro',
+    'trepar',
+    ' cú',
+    ' ku',
+    'xereca',
+    'xoxota',
+    'caceta',
+    'pau',
+    'pica',
+    'boqueteira',
+    'boqueteiro',
+    'fish ball cat',
+    'rapariga',
+    'bicha',
+    'brocha',
+    'boiola',
+    'cracudo',
+    'tu é uma piranha',
+    'sua piranha',
+    'tua mãe é uma piranha',
+    'tua mãe e uma piranha',
+    'sua vaca',
+    'monte de bosta',
+    'monte de merda',
+  ];
   constructor(
     private state: SharedStateService,
     private database: DatabaseService,
@@ -31,21 +126,6 @@ export class AppService {
   @Start()
   async startCommand(@Ctx() ctx: Context) {
     await ctx.reply('Welcome');
-  }
-
-  @Help()
-  async helpCommand(ctx: Context) {
-    await ctx.reply('Send me a sticker');
-  }
-
-  @On('sticker')
-  async onSticker(ctx: Context) {
-    await ctx.reply('👍');
-  }
-
-  @Hears('hi')
-  async hearsHi(@Ctx() ctx: Context) {
-    await ctx.reply('Hey there');
   }
 
   @Command('adicionar_palavra')
