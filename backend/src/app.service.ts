@@ -195,17 +195,17 @@ export class AppService {
 
     let userInfraction: UserInfractionResponse = {
       count: badWords.length,
-      message: `Usuário ${userName} já está com ${badWords.length} infrações`,
+      message: `Usuário ${userName} já está com ${badWords.length} infrações identificadas`,
       punishment: UserPunishmentEnum.NONE,
     };
 
     if (badWords.length > this.state.timeoutMaxCount + 50) {
       userInfraction.punishment = UserPunishmentEnum.BAN;
-      userInfraction.message = `Usuário ${userName} passou dos limites, seje banido`;
+      userInfraction.message = `Usuário ${userName} passou dos limites e foi banido`;
     } else if (badWords.length >= this.state.timeoutMaxCount) {
       userInfraction.punishment = UserPunishmentEnum.SUSPENSION;
       const timeoutLeft = this.state.timeoutMaxCount + 2 - badWords.length;
-      userInfraction.message = `Usuário ${userName} passou dos limites, tome timeout. Mais ${timeoutLeft} e você será banido.`;
+      userInfraction.message = `Usuário ${userName} passou dos limites. Mais ${timeoutLeft} e você será banido.`;
     }
 
     return userInfraction;
