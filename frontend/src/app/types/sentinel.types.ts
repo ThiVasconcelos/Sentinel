@@ -1,3 +1,9 @@
+export interface NotificationInfo {
+  date_sent: Date;
+  text: string;
+  chatTitle: string;
+}
+
 export interface ChatInfo {
   id: string;
   chatId: number;

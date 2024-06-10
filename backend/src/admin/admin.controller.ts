@@ -36,7 +36,8 @@ export class AdminController {
   @Get('notification')
   newMovementOccurred(@Query('date') date: Date) {
     date = new Date(date);
-
+    //console.log(date);
+    //console.log(this.state.lastOccurrence);
     if (typeof this.state.lastOccurrence === 'undefined') {
       return { occurred: false };
     }
@@ -128,6 +129,8 @@ export class AdminController {
           },
         },
       );
-    } catch {}
+    } catch (e) {
+      //console.log(e);
+    }
   }
 }

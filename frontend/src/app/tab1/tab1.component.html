@@ -113,9 +113,14 @@
   class="grid grid-cols-1 grid-flow-row absolute right-0 z-10 gap-y-4 mt-2 w-full max-w-md origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
   role="textbox"
   aria-orientation="vertical">
-  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-400">aaaaa</a>
-  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-400">aaaaa</a>
-  <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-400">aaaaa</a>
+  @if (lastThree()) { @for (item of lastThree(); track $index) {
+  <div class="hover:bg-red-400">
+    <a class="block text-lg px-4 pt-2 text-gray-700">{{ item.text }}</a>
+    <a class="text-xs font-thin px-4 pb-2 text-gray-700"
+      >Grupo: {{ item.chatTitle }} - {{ item.date_sent }}</a
+    >
+  </div>
+  } } @else { <a class="text-lg px-4 py-2 text-gray-700">Nenhuma notificação</a> }
 </div>
 
 } @if (grupos===true) {
@@ -142,14 +147,66 @@
 
 <body class="flex py-6 px-6">
   <div class="w-[1600px] h-[600px] bg-black rounded-md">
-    @if (chatBadWords()) { @for (user of chatBadWords(); track $index) {
-    <div>
-      <p class="text-white">{{ user.chatTitle }}</p>
-      <p class="text-white">{{ user.userName }}</p>
-      <p class="text-white">{{ user.badWords.length }}</p>
-    </div>
+    <ul class="list-decimal text-white">
+      @if (chatBadWords()) { @for (user of returnUsers(); track $index) {
+      <li class="ml-5">
+        <div class="flex">
+          <p class="text-white mr-2">{{ user.userName }}</p>
+          <button
+            mat-icon-button
+            class="small-icon-button"
+            [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu">
+            <mat-icon class="text-white hover:cursor-pointer mr-2">visibility</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="max-w-[480px] break-words">
+            @for (word of user.badWords; track $index) {
+            <menu mat-menu-item class="hover:bg-transparent mb-3">
+              <p class="text-lg">
+                {{ word.text }}
+              </p>
+              <p class="text-xs font-thin">{{ word.date_sent }}</p>
+            </menu>
 
-    } }
+            }
+          </mat-menu>
+
+          <button
+            mat-icon-button
+            class="small-icon-button"
+            [matMenuTriggerFor]="editMenu"
+            aria-label="Example icon-button with a menu">
+            <mat-icon class="text-white hover:cursor-pointer">edit</mat-icon>
+          </button>
+          <mat-menu #editMenu="matMenu" class="max-w-[480px] break-words">
+            <menu mat-menu-item class="hover:bg-transparent mb-3">
+              <div class="flex hover:cursor-pointer" (click)="banUser(user)">
+                <mat-icon class="text-red-500">block</mat-icon>
+                <p class="ml-4">Banir</p>
+              </div>
+            </menu>
+            <menu mat-menu-item class="hover:bg-transparent mb-3">
+              <button class="flex hover:cursor-pointer" (click)="timeoutUser(user)">
+                <mat-icon class="text-yellow-300">comments_disabled</mat-icon>
+                <p class="ml-4">Suspender</p>
+              </button>
+            </menu>
+            <menu mat-menu-item class="hover:bg-transparent mb-3">
+              <button class="flex hover:cursor-pointer" (click)="freeUser(user)">
+                <mat-icon class="text-green-500">check_circle</mat-icon>
+                <p class="ml-4">Liberar</p>
+              </button>
+            </menu>
+          </mat-menu>
+        </div>
+        <div class="text-white flex">
+          <p class="text-white">Chat:</p>
+          <p class="ml-1">{{ user.chatTitle }}</p>
+          <p class="ml-5">{{ user.badWords.length }} palavras ofensivas identificadas</p>
+        </div>
+      </li>
+      } }
+    </ul>
   </div>
 </body>
 
@@ -159,9 +216,10 @@
   <div class="w-[1600px] h-[600px] bg-black rounded-md">
     @if(chats()) { @for (c of chats(); track $index) {
     <div class="flex">
-      <p class="text-white">{{ c.chatTitle }}</p>
-      <p class="text-white">{{}}</p>
-      <p class="text-white">{{ user.badWords.length }}</p>
+      <p class="text-white mr-3">{{ c.chatTitle }}</p>
+      <mat-icon class="text-white hover:cursor-pointer" (click)="setGroupToSee(c.chatId)"
+        >settings</mat-icon
+      >
     </div>
     } }
   </div>

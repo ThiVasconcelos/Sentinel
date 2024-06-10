@@ -7,8 +7,10 @@ import { ChatInfo, UserBadWordObject } from '../types/sentinel.types';
 export class SentinelApi {
   constructor(private http: HttpClient) {}
 
-  test() {
-    return this.http.get('http://localhost:3000/');
+  hasAnotherInfractionOccurred(lastDate: Date) {
+    return this.http.get<{ occurred: boolean }>('http://localhost:3000/admin/notification', {
+      params: { date: lastDate.toISOString() },
+    });
   }
 
   getChatsData(): Observable<{ data: UserBadWordObject[]; chats: ChatInfo[] }> {
