@@ -82,7 +82,7 @@
               tabindex="-1">
               <!-- Active: "bg-gray-100", Not Active: "" -->
               <a
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-black hover:text-white"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-700 hover:text-white"
                 role="menuitem"
                 tabindex="-1"
                 id="user-menu-item-1"
@@ -116,25 +116,34 @@
 </div>
 
 } @if (grupos===true) {
-<body class="grid grid-cols-4 grid-rows-1 min-h-screen py-6 px-6 space-x-16">
-  <div class="w-[400px] h-[200px] bg-black rounded-md">Monitoramento</div>
-  <div class="w-[400px] h-[200px] bg-black rounded-md">Monitoramento</div>
+<body class="place-items-center py-6 px-6">
+  <button
+    class="w-[400px] h-[200px] bg-black rounded-md"
+    [ngClass]="
+      monitoramento === true
+        ? 'bg-white hover:bg-white'
+        : 'bg-gray-600 text-gray-300  hover:bg-teal-700  hover:text-white'
+    ">
+    <img src="assets\telegram.png" alt="" />
+  </button>
 </body>
 
 } @if (config===true) {
 
 <body class="flex items-center justify-center min-h-screen">
-  <div class="w-[700px] h-[600px] bg-black rounded-md">
-    <a
-      class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-red-500 hover:text-white"
-      >Config</a
-    >
+  <div class="grid grid-cols-4 py-3 px-3 grid-rows-12 w-[700px] h-[500px] bg-black rounded-md">
+    <button
+      class="rounded-md text-sm font-medium text-center text-lg text-white hover:bg-red-600 bg-slate-400 hover:text-white"
+      (click)="closePopUpConfig()">
+      Sair
+    </button>
+    <a class="text-center py-12 text-white text-lg">Conta de Demonstração</a>
   </div>
 </body>
 
 } @if (monitoramento===true) {
-<body class="flex items-center justify-center min-h-screen">
-  <div class="w-[1200px] h-[600px] bg-black rounded-md">Monitoramento</div>
+<body class="flex py-6 px-6">
+  <div class="w-[1600px] h-[600px] bg-black rounded-md">Monitoramento</div>
 </body>
 
 }

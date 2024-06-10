@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { reverse } from 'dns';
 import {
   Command,
   Ctx,
@@ -10,21 +9,24 @@ import {
   Start,
   Update,
 } from 'nestjs-telegraf';
-import { Context, Telegram } from 'telegraf';
+import { Context } from 'telegraf';
 import {
   TelegramMessage,
-  UserBadWordCount,
   UserInfractionResponse,
   UserPunishmentEnum,
 } from './types/telegram.types';
 import { v4 } from 'uuid';
 import { SharedStateService } from './state/shared_state.ts.service';
+import { DatabaseService } from './database/database.service';
 
 @Update()
 @Injectable()
 export class AppService {
   badWords = ['gordo'];
-  constructor(private state: SharedStateService) {}
+  constructor(
+    private state: SharedStateService,
+    private database: DatabaseService,
+  ) {}
 
   @Start()
   async startCommand(@Ctx() ctx: Context) {
@@ -40,6 +42,12 @@ export class AppService {
   async onSticker(ctx: Context) {
     await ctx.reply('👍');
   }
+
+  @Hears('hi')
+  async hearsHi(@Ctx() ctx: Context) {
+    await ctx.reply('Hey there');
+  }
+
   @Command('adicionar_palavra')
   async addBadWord(@Message() message: TelegramMessage, @Ctx() ctx: Context) {
     let [_, ...rest] = message.text.split(' ');
@@ -71,20 +79,17 @@ export class AppService {
     );
   }
 
-  incrementBadWord(message: TelegramMessage) {
-    if (!this.state.badWordsCount.has(message.chat.id)) {
-      this.state.badWordsCount.set(message.chat.id, new Map());
-    }
-    const chatMap = this.state.badWordsCount.get(message.chat.id);
-    if (!chatMap.has(message.from.id)) {
-      chatMap.set(message.from.id, []);
-    }
-    chatMap.get(message.from.id).push({
+  async incrementBadWord(message: TelegramMessage) {
+    const userData = await this.state.getUserData(
+      message.chat.id,
+      message.from.id,
+    );
+
+    userData.badWords.push({
       text: message.text,
-      user_id: message.from.id,
       date_sent: new Date(),
-      chat_id: message.chat.id,
     });
+    this.database.saveUserLogToDatabase(userData);
   }
 
   checkBadWordCount(
@@ -92,7 +97,7 @@ export class AppService {
     chatId: number,
     userName: string,
   ): UserInfractionResponse {
-    const badWords = this.state.badWordsCount.get(chatId).get(userId);
+    const badWords = this.state.badWordsCount.get(chatId).get(userId).badWords;
 
     let userInfraction: UserInfractionResponse = {
       count: badWords.length,
@@ -100,7 +105,7 @@ export class AppService {
       punishment: UserPunishmentEnum.NONE,
     };
 
-    if (badWords.length > this.state.timeoutMaxCount + 2) {
+    if (badWords.length > this.state.timeoutMaxCount + 50) {
       userInfraction.punishment = UserPunishmentEnum.BAN;
       userInfraction.message = `Usuário ${userName} passou dos limites, seje banido`;
     } else if (badWords.length >= this.state.timeoutMaxCount) {
@@ -127,7 +132,7 @@ export class AppService {
 
     for (const word of this.badWords) {
       if (message.text.includes(word)) {
-        this.incrementBadWord(message);
+        await this.incrementBadWord(message);
         madeInfraction = true;
         await ctx.deleteMessage(message.message_id);
         break;

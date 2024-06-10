@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TelegrafModule } from 'nestjs-telegraf';
-import { SharedStateService } from './state/shared_state.ts.service';
 import { AdminController } from './admin/admin.controller';
-
+import { SharedStateService } from './state/shared_state.ts.service';
+import { DatabaseService } from './database/database.service';
 
 @Module({
   imports: [
@@ -19,6 +19,6 @@ import { AdminController } from './admin/admin.controller';
     }),
   ],
   controllers: [AppController, AdminController],
-  providers: [AppService, SharedStateService],
+  providers: [AppService, SharedStateService, DatabaseService],
 })
 export class AppModule {}

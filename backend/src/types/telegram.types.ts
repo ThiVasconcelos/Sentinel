@@ -1,11 +1,16 @@
 type LanguageCode = 'pt-br';
 type ChatType = 'private' | 'group' | 'supergroup' | 'channel';
 
-export interface UserBadWordCount {
-  user_id: number;
-  chat_id: number;
+export interface BadWords {
   date_sent: Date;
   text: string;
+}
+
+export interface UserBadWordObject {
+  id: string;
+  userId: number;
+  chatId: number;
+  badWords: BadWords[];
 }
 
 export const enum UserPunishmentEnum {

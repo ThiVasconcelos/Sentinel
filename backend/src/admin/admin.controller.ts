@@ -1,29 +1,33 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
-import { Scenes, Telegraf } from 'telegraf';
+import { Telegraf } from 'telegraf';
 import { CustomContext } from './context.interface';
 import { SharedStateService } from 'src/state/shared_state.ts.service';
-import { UserBadWordCount } from 'src/types/telegram.types';
+import { UserBadWordObject } from 'src/types/telegram.types';
+import { DatabaseService } from 'src/database/database.service';
+/* quantidade de infrações pra acontecer o primeiro timeout -> isso vai ter um default
+ * setar a duração do timeout -> isso vai ter um default
+ * quantas infrações pra finalmente dar um ban -> vai ter um default
+ * */
 
 @Controller('admin')
 export class AdminController {
   constructor(
     @InjectBot() private bot: Telegraf<CustomContext>,
     private state: SharedStateService,
+    private database: DatabaseService,
   ) {}
 
   @Post('free-user')
-  async emptyUserInfractions(@Body() userData: UserBadWordCount) {
-    let badWords = this.state.badWordsCount
-      .get(userData.chat_id)
-      .get(userData.user_id);
-
-    badWords.length = 0;
+  async emptyUserInfractions(@Body() body: UserBadWordObject) {
+    let userData = await this.state.getUserData(body.chatId, body.userId);
+    userData.badWords.length = 0;
+    await this.database.saveUserLogToDatabase(userData);
 
     try {
       await this.bot.telegram.restrictChatMember(
-        userData.chat_id,
-        userData.user_id,
+        userData.chatId,
+        userData.userId,
         {
           permissions: {
             can_send_polls: true,
@@ -47,18 +51,18 @@ export class AdminController {
   }
 
   @Post('/ban-user')
-  async banUser(@Body() userData: UserBadWordCount) {
+  async banUser(@Body() userData: UserBadWordObject) {
     try {
-      await this.bot.telegram.banChatMember(userData.chat_id, userData.user_id);
+      await this.bot.telegram.banChatMember(userData.chatId, userData.userId);
     } catch {}
   }
 
   @Post('/timeout-user')
-  async timeoutUser(@Body() userData: UserBadWordCount) {
+  async timeoutUser(@Body() userData: UserBadWordObject) {
     try {
       await this.bot.telegram.restrictChatMember(
-        userData.chat_id,
-        userData.user_id,
+        userData.chatId,
+        userData.userId,
         {
           until_date: (Date.now() + 35000) / 1000,
           permissions: {

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
+import { SentinelApi } from '../api/sentinel.api';
+import { UserBadWordObject } from '../types/sentinel.types';
 @Component({
   selector: 'app-tab1',
   standalone: true,
@@ -15,6 +17,13 @@ export class Tab1Component {
   monitoramento = false;
   config = false;
   grupos = false;
+
+  chatBadWords: Map<number, Map<number, UserBadWordObject[]>> = new Map();
+
+  constructor(private api: SentinelApi) {
+    console.log(this.api.test());
+  }
+
   dropdown() {
     this.showMenuProfile = !this.showMenuProfile;
     this.showNotifica = false;
@@ -39,6 +48,13 @@ export class Tab1Component {
   }
   popUpConfig() {
     this.config = true;
+    this.grupos = false;
+    this.monitoramento = false;
+    this.showMenuProfile = false;
+    this.showNotifica = false;
+  }
+  closePopUpConfig() {
+    this.config = false;
     this.grupos = false;
     this.monitoramento = false;
     this.showMenuProfile = false;
