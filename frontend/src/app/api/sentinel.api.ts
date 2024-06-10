@@ -8,7 +8,7 @@ export class SentinelApi {
   constructor(private http: HttpClient) {}
 
   test() {
-    this.http.get('http://localhost:3000/');
+    return this.http.get('http://localhost:3000/');
   }
 
   getChatsData(): Observable<UserBadWordObject[]> {

@@ -7,6 +7,7 @@ import { v4 } from 'uuid';
 export class SharedStateService {
   badWordsCount: Map<number, Map<number, UserBadWordObject>> = new Map();
   timeoutMaxCount = 3;
+  lastOccurrence: Date | undefined;
 
   constructor(private database: DatabaseService) {}
 

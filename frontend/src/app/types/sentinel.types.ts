@@ -6,6 +6,8 @@ export interface BadWords {
 export interface UserBadWordObject {
   id: string;
   userId: number;
+  userName: string;
   chatId: number;
+  chatTitle: string;
   badWords: BadWords[];
 }

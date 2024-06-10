@@ -20,13 +20,12 @@ export class Tab1Component {
 
   chatBadWords: Map<number, Map<number, UserBadWordObject[]>> = new Map();
 
-  constructor(private api: SentinelApi) {
-    console.log(this.api.test());
-  }
+  constructor(private api: SentinelApi) {}
 
-  dropdown() {
+  async dropdown() {
     this.showMenuProfile = !this.showMenuProfile;
     this.showNotifica = false;
+    await this.api.test().subscribe(data => console.log(data));
   }
   dropdownNotifica() {
     this.showNotifica = !this.showNotifica;
@@ -37,6 +36,7 @@ export class Tab1Component {
     this.config = false;
     this.grupos = false;
     this.showNotifica = false;
+    this.selecaoGrupos = false;
     this.showMenuProfile = false;
   }
   popUpGrupos() {
@@ -44,6 +44,7 @@ export class Tab1Component {
     this.monitoramento = false;
     this.config = false;
     this.showNotifica = false;
+    this.selecaoGrupos = false;
     this.showMenuProfile = false;
   }
   popUpConfig() {
@@ -52,6 +53,7 @@ export class Tab1Component {
     this.monitoramento = false;
     this.showMenuProfile = false;
     this.showNotifica = false;
+    this.selecaoGrupos = false;
   }
   closePopUpConfig() {
     this.config = false;
@@ -59,6 +61,7 @@ export class Tab1Component {
     this.monitoramento = false;
     this.showMenuProfile = false;
     this.showNotifica = false;
+    this.selecaoGrupos = false;
   }
   novaNotifica = true;
   checkNotifica() {
@@ -67,5 +70,14 @@ export class Tab1Component {
   doubleCallNotifica() {
     this.dropdownNotifica();
     this.checkNotifica();
+  }
+  selecaoGrupos = false;
+  abrirGrupos() {
+    this.config = false;
+    this.grupos = false;
+    this.monitoramento = false;
+    this.showMenuProfile = false;
+    this.showNotifica = false;
+    this.selecaoGrupos = true;
   }
 }

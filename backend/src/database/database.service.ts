@@ -33,6 +33,19 @@ export class DatabaseService {
     return userData.resources[0];
   }
 
+  async getAllUserData(): Promise<UserBadWordObject[] | undefined> {
+    const data = await this.cosmosClient
+      .database(this.databaseId)
+      .container(this.containerId)
+      .items.query('SELECT * FROM c')
+      .fetchAll();
+    
+    if (typeof data.resources === 'undefined') {
+      return;
+    }
+    return data.resources;
+  }
+
   async saveUserLogToDatabase(userData: UserBadWordObject) {
     await this.cosmosClient
       .database(this.databaseId)

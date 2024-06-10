@@ -4,7 +4,10 @@
       <div>
         <div class="flex sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
-            <img class="h-8 f mg mr-4" src="" alt="Your Company" />
+            <img
+              class="h-8 f mg mr-4"
+              src="https://onedrive.live.com/embed?resid=3B97D3D8E72671E1%21114&authkey=%21AGkV3YUYvaxR8yw&width=102&height=103"
+              alt="Your Company" />
           </div>
           <div class="sm:block">
             <div class="flex space-x-4">
@@ -59,7 +62,7 @@
             <div>
               <button
                 type="button"
-                class="bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                class="focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 id="user-menu-button"
                 aria-expanded="true"
                 aria-haspopup="true"
@@ -116,34 +119,33 @@
 </div>
 
 } @if (grupos===true) {
-<body class="place-items-center py-6 px-6">
-  <button
-    class="w-[400px] h-[200px] bg-black rounded-md"
-    [ngClass]="
-      monitoramento === true
-        ? 'bg-white hover:bg-white'
-        : 'bg-gray-600 text-gray-300  hover:bg-teal-700  hover:text-white'
-    ">
-    <img src="assets\telegram.png" alt="" />
+<body>
+  <button type="button" id="group-button" aria-haspopup="true" (click)="abrirGrupos()">
+    <img class="rounded-md max-w-[300px] max-h-[500px] px-6 py-6" src="assets\telegram.png" />
   </button>
 </body>
 
 } @if (config===true) {
 
 <body class="flex items-center justify-center min-h-screen">
-  <div class="grid grid-cols-4 py-3 px-3 grid-rows-12 w-[700px] h-[500px] bg-black rounded-md">
+  <div class="py-10 px-10 w-[700px] h-[400px] bg-teal-700 rounded-md">
     <button
-      class="rounded-md text-sm font-medium text-center text-lg text-white hover:bg-red-600 bg-slate-400 hover:text-white"
+      class="py-2 px-2 rounded-md text-sm font-medium text-center text-lg text-white hover:bg-red-600 bg-slate-400 hover:text-white select-none"
       (click)="closePopUpConfig()">
       Sair
     </button>
-    <a class="text-center py-12 text-white text-lg">Conta de Demonstração</a>
+    <a class="px-[10px] py-12 text-white text-[36px]"> Conta de demonstração</a>
   </div>
 </body>
 
 } @if (monitoramento===true) {
 <body class="flex py-6 px-6">
-  <div class="w-[1600px] h-[600px] bg-black rounded-md">Monitoramento</div>
+  <div class="w-[1600px] h-[600px] bg-black rounded-md"></div>
+</body>
+
+} @if (selecaoGrupos===true) {
+<body class="flex py-6 px-6">
+  <div class="w-[1600px] h-[600px] bg-black rounded-md"></div>
 </body>
 
 }

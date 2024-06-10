@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CustomContext } from './context.interface';
@@ -17,6 +17,26 @@ export class AdminController {
     private state: SharedStateService,
     private database: DatabaseService,
   ) {}
+
+  @Get('get-chats')
+  async getChatsData() {
+    return await this.database.getAllUserData();
+  }
+
+  @Get('notification')
+  newMovementOccurred(@Query('date') date: Date) {
+    date = new Date(date);
+
+    if (typeof this.state.lastOccurrence === 'undefined') {
+      return { occurred: false };
+    }
+
+    if (this.state.lastOccurrence!.getTime() > date.getTime()) {
+      return { occurred: true };
+    }
+
+    return { occurred: false };
+  }
 
   @Post('free-user')
   async emptyUserInfractions(@Body() body: UserBadWordObject) {

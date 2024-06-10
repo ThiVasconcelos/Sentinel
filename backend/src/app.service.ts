@@ -84,10 +84,11 @@ export class AppService {
       message.chat.id,
       message.from.id,
     );
-
+    const date = new Date();
+    this.state.lastOccurrence = date;
     userData.badWords.push({
       text: message.text,
-      date_sent: new Date(),
+      date_sent: date,
     });
     this.database.saveUserLogToDatabase(userData);
   }
