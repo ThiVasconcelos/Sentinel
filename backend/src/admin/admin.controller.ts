@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+} from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { CustomContext } from './context.interface';
@@ -19,28 +26,14 @@ export class AdminController {
   ) {}
 
   @Get('get-chats')
-  async getChatsData() {
-    return await this.database.getAllUserData();
-  }
-
-  @Get('notification')
-  newMovementOccurred(@Query('date') date: Date) {
-    date = new Date(date);
-
-    if (typeof this.state.lastOccurrence === 'undefined') {
-      return { occurred: false };
-    }
-
-    if (this.state.lastOccurrence!.getTime() > date.getTime()) {
-      return { occurred: true };
-    }
-
-    return { occurred: false };
-  }
+  async getChatsData() {}
 
   @Post('free-user')
   async emptyUserInfractions(@Body() body: UserBadWordObject) {
     let userData = await this.state.getUserData(body.chatId, body.userId);
+    if (typeof userData === 'undefined') {
+      throw new NotFoundException('Usuário inexistente');
+    }
     userData.badWords.length = 0;
     await this.database.saveUserLogToDatabase(userData);
 
@@ -67,14 +60,32 @@ export class AdminController {
           },
         },
       );
-    } catch {}
+    } catch {
+      throw new BadGatewayException(
+        'Erro ao tentar tirar restrições do usuário. Tente novamente',
+      );
+    }
+
+    try {
+      this.bot.telegram.unbanChatMember(userData.chatId, userData.userId, {
+        only_if_banned: true,
+      });
+    } catch {
+      throw new BadGatewayException(
+        'Erro ao tentar tirar restrições do usuário. Tente novamente',
+      );
+    }
   }
 
   @Post('/ban-user')
   async banUser(@Body() userData: UserBadWordObject) {
     try {
       await this.bot.telegram.banChatMember(userData.chatId, userData.userId);
-    } catch {}
+    } catch {
+      throw new BadGatewayException(
+        'Erro ao tentar banir o usuário. Tente novamente',
+      );
+    }
   }
 
   @Post('/timeout-user')
@@ -103,6 +114,10 @@ export class AdminController {
           },
         },
       );
-    } catch {}
+    } catch {
+      throw new BadGatewayException(
+        'Erro ao tentar dar timeout no usuário. Tente novamente',
+      );
+    }
   }
 }

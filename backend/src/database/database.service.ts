@@ -39,7 +39,7 @@ export class DatabaseService {
       .container(this.containerId)
       .items.query('SELECT * FROM c')
       .fetchAll();
-    
+
     if (typeof data.resources === 'undefined') {
       return;
     }
