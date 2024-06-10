@@ -24,7 +24,8 @@ import { DatabaseService } from './database/database.service';
 export class AppService {
   badWords = [
     'gordo',
-    'Filho da Puta',
+    'p4u',
+    'filho da puta',
     'merdinha',
     'seu merda',
     'seu bosta',
@@ -95,8 +96,8 @@ export class AppService {
     'punheta',
     'punheteiro',
     'trepar',
-    ' cú',
-    ' ku',
+    'cú',
+    'ku',
     'xereca',
     'xoxota',
     'caceta',
@@ -104,12 +105,14 @@ export class AppService {
     'pica',
     'boqueteira',
     'boqueteiro',
-    'fish ball cat',
+    'corno',
     'rapariga',
     'bicha',
     'brocha',
     'boiola',
     'cracudo',
+    'g4y',
+    'kenga',
     'tu é uma piranha',
     'sua piranha',
     'tua mãe é uma piranha',
@@ -163,7 +166,7 @@ export class AppService {
     try {
       await ctx.telegram.sendMessage(
         userData.user.id.toString(),
-        `Use esse código para ter acesso completo ao grupo: ${v4()}`,
+        `Use esse código para ver o monitoramento do grupo: ${v4()}`,
       );
     } catch {}
   }
@@ -177,7 +180,7 @@ export class AppService {
     const date = new Date();
     this.state.lastOccurrence = date;
     userData.badWords.push({
-      text: message.text,
+      text: message.text.toLowerCase(),
       date_sent: date,
     });
     this.database.saveUserLogToDatabase(userData);
