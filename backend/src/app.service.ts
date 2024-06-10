@@ -180,7 +180,7 @@ export class AppService {
     const date = new Date();
     this.state.lastOccurrence = date;
     userData.badWords.push({
-      text: message.text.toLowerCase(),
+      text: message.text,
       date_sent: date,
     });
     this.database.saveUserLogToDatabase(userData);
@@ -199,7 +199,7 @@ export class AppService {
       punishment: UserPunishmentEnum.NONE,
     };
 
-    if (badWords.length > this.state.timeoutMaxCount + 50) {
+    if (badWords.length > this.state.timeoutMaxCount + 2) {
       userInfraction.punishment = UserPunishmentEnum.BAN;
       userInfraction.message = `Usuário ${userName} passou dos limites e foi banido`;
     } else if (badWords.length >= this.state.timeoutMaxCount) {
@@ -225,7 +225,7 @@ export class AppService {
     let madeInfraction = false;
 
     for (const word of this.badWords) {
-      if (message.text.includes(word)) {
+      if (message.text.toLowerCase().includes(word)) {
         await this.incrementBadWord(message);
         madeInfraction = true;
         await ctx.deleteMessage(message.message_id);
