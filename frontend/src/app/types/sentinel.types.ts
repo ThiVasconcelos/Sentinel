@@ -1,3 +1,12 @@
+export interface ChatInfo {
+  id: string;
+  chatId: number;
+  chatTitle: string;
+  timeoutQuantity: number;
+  timeoutDuration: number;
+  banQuantity: number;
+}
+
 export interface BadWords {
   date_sent: Date;
   text: string;

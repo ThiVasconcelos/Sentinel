@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, WritableSignal, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { SentinelApi } from '../api/sentinel.api';
-import { UserBadWordObject } from '../types/sentinel.types';
+import { ChatInfo, UserBadWordObject } from '../types/sentinel.types';
+import { first } from 'rxjs';
 @Component({
   selector: 'app-tab1',
   standalone: true,
@@ -17,15 +18,17 @@ export class Tab1Component {
   monitoramento = false;
   config = false;
   grupos = false;
+  selecaoGrupos = false;
+  novaNotifica = true;
 
-  chatBadWords: Map<number, Map<number, UserBadWordObject[]>> = new Map();
+  chatBadWords: WritableSignal<UserBadWordObject[] | undefined> = signal(undefined);
+  chats: WritableSignal<ChatInfo[] | undefined> = signal(undefined);
 
   constructor(private api: SentinelApi) {}
 
   async dropdown() {
     this.showMenuProfile = !this.showMenuProfile;
     this.showNotifica = false;
-    await this.api.test().subscribe(data => console.log(data));
   }
   dropdownNotifica() {
     this.showNotifica = !this.showNotifica;
@@ -63,7 +66,6 @@ export class Tab1Component {
     this.showNotifica = false;
     this.selecaoGrupos = false;
   }
-  novaNotifica = true;
   checkNotifica() {
     this.novaNotifica = false;
   }
@@ -71,7 +73,6 @@ export class Tab1Component {
     this.dropdownNotifica();
     this.checkNotifica();
   }
-  selecaoGrupos = false;
   abrirGrupos() {
     this.config = false;
     this.grupos = false;
@@ -79,5 +80,13 @@ export class Tab1Component {
     this.showMenuProfile = false;
     this.showNotifica = false;
     this.selecaoGrupos = true;
+
+    this.api
+      .getChatsData()
+      .pipe(first())
+      .subscribe(data => {
+        this.chatBadWords.set(data.data);
+        this.chats.set(data.chats);
+      });
   }
 }

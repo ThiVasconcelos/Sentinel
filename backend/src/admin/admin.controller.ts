@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Post,
+  Query,
 } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
@@ -25,14 +26,33 @@ export class AdminController {
     private database: DatabaseService,
   ) {}
 
-  @Get('get-chats')
-  async getChatsData() {}
+  @Get('get-data')
+  async getChatsData() {
+    const usersData = await this.database.getAllUserData();
+    const chatsData = await this.database.getChats();
+    return { data: usersData, chats: chatsData };
+  }
+
+  @Get('notification')
+  newMovementOccurred(@Query('date') date: Date) {
+    date = new Date(date);
+
+    if (typeof this.state.lastOccurrence === 'undefined') {
+      return { occurred: false };
+    }
+
+    if (this.state.lastOccurrence!.getTime() > date.getTime()) {
+      return { occurred: true };
+    }
+
+    return { occurred: false };
+  }
 
   @Post('free-user')
   async emptyUserInfractions(@Body() body: UserBadWordObject) {
     let userData = await this.state.getUserData(body.chatId, body.userId);
     if (typeof userData === 'undefined') {
-      throw new NotFoundException('Usuário inexistente');
+      throw new NotFoundException();
     }
     userData.badWords.length = 0;
     await this.database.saveUserLogToDatabase(userData);
@@ -61,19 +81,17 @@ export class AdminController {
         },
       );
     } catch {
-      throw new BadGatewayException(
-        'Erro ao tentar tirar restrições do usuário. Tente novamente',
-      );
+      throw new BadGatewayException();
     }
 
     try {
-      this.bot.telegram.unbanChatMember(userData.chatId, userData.userId, {
-        only_if_banned: true,
-      });
-    } catch {
-      throw new BadGatewayException(
-        'Erro ao tentar tirar restrições do usuário. Tente novamente',
+      await this.bot.telegram.unbanChatMember(
+        userData.chatId,
+        userData.userId,
+        { only_if_banned: true },
       );
+    } catch {
+      throw new BadGatewayException();
     }
   }
 
@@ -81,11 +99,7 @@ export class AdminController {
   async banUser(@Body() userData: UserBadWordObject) {
     try {
       await this.bot.telegram.banChatMember(userData.chatId, userData.userId);
-    } catch {
-      throw new BadGatewayException(
-        'Erro ao tentar banir o usuário. Tente novamente',
-      );
-    }
+    } catch {}
   }
 
   @Post('/timeout-user')
@@ -114,10 +128,6 @@ export class AdminController {
           },
         },
       );
-    } catch {
-      throw new BadGatewayException(
-        'Erro ao tentar dar timeout no usuário. Tente novamente',
-      );
-    }
+    } catch {}
   }
 }

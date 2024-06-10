@@ -4,7 +4,7 @@ import { getBotToken } from 'nestjs-telegraf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+  app.enableCors();
   //app.use(bot.webhookCallback('/secret-path'));
   await app.listen(3000);
 }

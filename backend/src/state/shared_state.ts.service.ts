@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { UserBadWordObject } from 'src/types/telegram.types';
+import { TelegramMessage, UserBadWordObject } from 'src/types/telegram.types';
 import { v4 } from 'uuid';
 
 @Injectable()
@@ -14,7 +14,8 @@ export class SharedStateService {
   async getUserData(
     chatId: number,
     userId: number,
-  ): Promise<UserBadWordObject> {
+    message?: TelegramMessage,
+  ): Promise<UserBadWordObject | undefined> {
     if (!this.badWordsCount.has(chatId)) {
       this.badWordsCount.set(chatId, new Map());
     }
@@ -25,9 +26,14 @@ export class SharedStateService {
         userId,
       );
       if (typeof userData === 'undefined') {
+        if (typeof message === 'undefined') {
+          return;
+        }
         chatMap.set(userId, {
           id: v4(),
           chatId: chatId,
+          chatTitle: message.chat.title,
+          userName: `${message.from.first_name} ${message.from.last_name}`,
           userId: userId,
           badWords: [],
         });
@@ -35,7 +41,9 @@ export class SharedStateService {
         chatMap.set(userId, {
           id: userData.id,
           chatId: userData.chatId,
+          chatTitle: userData.chatTitle,
           userId: userData.userId,
+          userName: userData.userName,
           badWords: userData.badWords,
         });
       }

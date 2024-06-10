@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CosmosClient } from '@azure/cosmos';
 import { ConfigService } from '@nestjs/config';
-import { UserBadWordObject } from 'src/types/telegram.types';
+import {
+  ChatInfo,
+  TelegramMessage,
+  UserBadWordObject,
+} from 'src/types/telegram.types';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class DatabaseService {
@@ -9,6 +14,7 @@ export class DatabaseService {
   databaseId = 'SampleDB';
   containerId = 'BadWords';
   partitionKey = { kind: 'Hash', paths: ['/partitionKey'] };
+  chatContainerId = 'Chats';
 
   constructor(private configService: ConfigService) {
     //const endpoint = configService.get<string>("COSMOSDB_ENDPOINT");
@@ -51,5 +57,38 @@ export class DatabaseService {
       .database(this.databaseId)
       .container(this.containerId)
       .items.upsert(userData);
+  }
+
+  async createChat(message: TelegramMessage): Promise<string | undefined> {
+    const createChat: ChatInfo = {
+      id: v4(),
+      chatTitle: message.chat.title,
+      chatId: message.chat.id,
+      timeoutQuantity: 2,
+      timeoutDuration: 35,
+      banQuantity: 4,
+    };
+    try {
+      await this.cosmosClient
+        .database(this.databaseId)
+        .container(this.chatContainerId)
+        .items.upsert(createChat);
+    } catch {
+      return 'error';
+    }
+  }
+
+  async getChats(): Promise<ChatInfo[]> {
+    const data = await this.cosmosClient
+      .database(this.databaseId)
+      .container(this.chatContainerId)
+      .items.query('select * from c')
+      .fetchAll();
+
+    if (typeof data.resources === 'undefined') {
+      return [];
+    }
+
+    return data.resources;
   }
 }

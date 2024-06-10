@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import {
   Command,
   Ctx,
@@ -73,16 +73,26 @@ export class AppService {
     if (userData.status !== 'creator') {
       return;
     }
-    await ctx.telegram.sendMessage(
-      userData.user.id.toString(),
-      `Use esse código para ter acesso completo ao grupo: ${v4()}`,
+
+    const result = await this.database.createChat(
+      ctx.message as TelegramMessage,
     );
+    if (result === 'error') {
+      return;
+    }
+    try {
+      await ctx.telegram.sendMessage(
+        userData.user.id.toString(),
+        `Use esse código para ter acesso completo ao grupo: ${v4()}`,
+      );
+    } catch {}
   }
 
   async incrementBadWord(message: TelegramMessage) {
     const userData = await this.state.getUserData(
       message.chat.id,
       message.from.id,
+      message,
     );
     const date = new Date();
     this.state.lastOccurrence = date;
