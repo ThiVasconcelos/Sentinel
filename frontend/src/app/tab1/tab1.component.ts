@@ -17,6 +17,10 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './tab1.component.css',
 })
 export class Tab1Component {
+  feedback = false;
+  closeFeedbacl() {
+    this.feedback = false;
+  }
   showMenuProfile = false;
   showNotifica = false;
   monitoramento = false;
@@ -147,6 +151,7 @@ export class Tab1Component {
     this.showMenuProfile = false;
     this.showNotifica = false;
     this.selecaoGrupos = false;
+    this.feedback = false;
   }
   closePopUpConfig() {
     this.config = false;
@@ -199,14 +204,17 @@ export class Tab1Component {
   }
 
   async banUser(user: UserBadWordObject) {
+    this.feedback = true;
     await this.api.banUser(user).pipe(first()).subscribe();
   }
 
   async timeoutUser(user: UserBadWordObject) {
+    this.feedback = true;
     await this.api.timeoutUser(user).pipe(first()).subscribe();
   }
 
   async freeUser(user: UserBadWordObject) {
+    this.feedback = true;
     await this.api.freeUser(user).pipe(first()).subscribe();
   }
 }

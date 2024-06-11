@@ -16,7 +16,7 @@
                 (click)="popUpGrupos()"
                 class="rounded-md px-3 py-2 text-sm font-medium select-none"
                 [ngClass]="
-                  grupos === true
+                  grupos === true || selecaoGrupos === true
                     ? 'bg-white hover:bg-white'
                     : 'bg-black text-gray-300  hover:bg-teal-700  hover:text-white'
                 "
@@ -134,12 +134,7 @@
 
 <body class="flex items-center justify-center min-h-screen">
   <div class="py-10 px-10 w-[700px] h-[400px] bg-teal-700 rounded-md">
-    <button
-      class="py-2 px-2 rounded-md text-sm font-medium text-center text-lg text-white hover:bg-red-600 bg-slate-400 hover:text-white select-none"
-      (click)="closePopUpConfig()">
-      Sair
-    </button>
-    <a class="px-[10px] py-12 text-white text-[36px]"> Conta de demonstração</a>
+    <a class="px-[10px] py-12 text-white text-center text-[32px]"> Conta de demonstração</a>
   </div>
 </body>
 
@@ -148,6 +143,7 @@
 <body class="flex py-6 px-6">
   <div class="w-[1600px] h-[600px] bg-black rounded-md">
     <ul class="list-decimal text-white">
+      <a class="text-yellow-50 px-8 py-4 text-[34px]">Agressores dectados</a>
       @if (chatBadWords()) { @for (user of returnUsers(); track $index) {
       <li class="ml-5">
         <div class="flex">
@@ -202,24 +198,40 @@
         <div class="text-white flex">
           <p class="text-white">Chat:</p>
           <p class="ml-1">{{ user.chatTitle }}</p>
-          <p class="ml-5">{{ user.badWords.length }} palavras ofensivas identificadas</p>
+          <p class="ml-5">{{ user.badWords.length }} mensagens identificadas</p>
         </div>
       </li>
       } }
     </ul>
+    @if ( feedback ===true){
+    <div class="flex items-center justify-center min-h-screen">
+      <div
+        class="py-6 px-12 mt-2 w-ful hover:bg-red-500 max-w-md rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        role="textbox"
+        aria-orientation="vertical"
+        (click)="closeFeedbacl()">
+        <a class="text-lg px-4 py-2 hover:text-white text-gray-700"
+          >Ação realizada, verifique o grupo.</a
+        >
+      </div>
+    </div>
+    }
   </div>
 </body>
 
 } @if (selecaoGrupos===true) {
 
 <body class="flex py-6 px-6">
-  <div class="w-[1600px] h-[600px] bg-black rounded-md">
+  <div class="py-4 px-8 w-[1600px] h-[600px] bg-black rounded-md tex-[30px]">
+    <a class="text-yellow-50 text-[36px]">Grupos Autorizados</a>
     @if(chats()) { @for (c of chats(); track $index) {
-    <div class="flex">
-      <p class="text-white mr-3">{{ c.chatTitle }}</p>
-      <mat-icon class="text-white hover:cursor-pointer" (click)="setGroupToSee(c.chatId)"
-        >settings</mat-icon
-      >
+    <div class="flex" (click)="setGroupToSee(c.chatId)">
+      @if(['teste12', 'Sentinel_Teste', 'sentinel_test_group'].indexOf(c.chatTitle) === -1){
+      <p class="text-white mr-3 py-2 hover:text-teal-700">{{ c.chatTitle }}</p>
+      <mat-icon
+        class="text-white hover:cursor-pointer hover:ring-2 hover:ring-teal-700 rounded-full"
+        >check_circle</mat-icon
+      >}
     </div>
     } }
   </div>
